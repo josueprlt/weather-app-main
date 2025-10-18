@@ -1,8 +1,15 @@
 import {IconUnits, IconDropdown} from "./icons.jsx";
 
-export const Select = ({icon = "units", children}) => {
+export const Select = ({icon = "units", children, color = "800"}) => {
     const icons = {
         "units": <IconUnits/>,
+        "none": null,
+    }
+
+    const bgColor = {
+        "800": "bg-neutral-800",
+        "700": "bg-neutral-700",
+        "600": "bg-neutral-600",
     }
     return (
         <div>
@@ -13,7 +20,7 @@ export const Select = ({icon = "units", children}) => {
 
                 <select
                     id="modern-select"
-                    className="appearance-none px-7 sm:px-10 text-center py-1 sm:py-3 rounded-xl bg-neutral-800 border border-transparent transition duration-200 cursor-pointer"
+                    className={`appearance-none ${icon === "none" ? "pr-7 pl-2" : "px-7"} sm:px-10 text-center py-1 sm:py-3 rounded-lg ${bgColor[color]} border border-transparent transition duration-200 cursor-pointer`}
                 >
                     <option value="">{children}</option>
                 </select>
