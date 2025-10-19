@@ -42,7 +42,7 @@ export const DailyForecast = () => {
     ]
 
     return (
-        <div className="grid grid-cols-3 gap-4 sm:mx-8 md:mx-14">
+        <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 md:grid-cols-7">
             {InfoCards.map((card, index) => <DailyForecastCard key={index} {...card}/>)}
         </div>
     )

@@ -18,6 +18,8 @@
 
     --font-bricolage-grotesque: "Bricolage Grotesque", sans-serif;
     --font-dm-sans: "DM Sans", sans-serif;
+
+    --breakpoint-xs: 350px;
 }
 
 @layer base {

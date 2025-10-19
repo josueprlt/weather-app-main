@@ -19,7 +19,7 @@ export const WeatherInfoCards = () => {
     ]
 
     return (
-        <section className="grid grid-cols-2 gap-4 sm:mx-8 md:mx-14">
+        <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {InfoCards.map((card, index) => <WeatherInfoCard key={index} {...card}/>)}
         </section>
     )
