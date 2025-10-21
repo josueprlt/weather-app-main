@@ -6,11 +6,8 @@ import WeatherInfoCard from "./components/WeatherInfoCard";
 import DailyForecast from "./components/DailyForecast";
 import HourlyForecast from "./components/HourlyForecast";
 import Select from "./components/Select";
-import FetchMeteo from "./services/FetchMeteo";
 
 function App() {
-
-    FetchMeteo();
 
     return (
         <>
