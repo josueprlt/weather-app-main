@@ -1,8 +1,8 @@
 import {IconSearch} from "./icons.jsx";
 
-export const ResearchBar = ({placeholder = "Search for a place..."}) => {
+export const ResearchBar = ({placeholder = "Search for a place...", props}) => {
     return (
-        <div className="relative w-72 sm:w-86">
+        <div className={`relative w-full ${props}`}>
             <span className="pointer-events-none absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2">
                 <IconSearch/>
             </span>
