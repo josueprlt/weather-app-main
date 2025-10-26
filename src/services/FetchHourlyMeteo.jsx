@@ -1,12 +1,12 @@
-import getWeatherCode from "../utils/getWeatherCode";
+import getWeatherCode from "../utils/getWeatherCode.jsx";
 
-export default async function fetchDailyMeteo() {
+export default async function fetchHourlyMeteo() {
     let weatherData;
     try {
         const params = {
             latitude: 48.8534,
             longitude: 2.3488,
-            daily: ["temperature_2m_min", "temperature_2m_max", "weather_code"],
+            hourly: ["weather_code", "temperature_2m", "dew_point_2m"],
             timezone: "auto"
         };
 
@@ -29,15 +29,12 @@ export default async function fetchDailyMeteo() {
 
         // Simplification de la structure
         weatherData = {
-            latitude: data.latitude,
-            longitude: data.longitude,
-            elevation: data.elevation,
             timezone: data.timezone,
-            daily: {
-                time: data.daily.time.map((t) => new Date(t).toLocaleDateString("en-US", {weekday: "long"})),
-                weather_code: getWeatherCode(data.daily.weather_code),
-                temperature_2m_min: data.daily.temperature_2m_min,
-                temperature_2m_max: data.daily.temperature_2m_max,
+            hourly: {
+                time: data.hourly.time,
+                weather_code: getWeatherCode(data.hourly.weather_code),
+                temperature_2m: data.hourly.temperature_2m,
+                dew_point_2m: data.hourly.dew_point_2m,
             },
         };
         return weatherData;

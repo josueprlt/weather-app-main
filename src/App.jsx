@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react";
 import Navbar from "./components/Navbar";
 import ResearchBar from "./components/ResearchBar";
 import Button from "./components/Button";
@@ -6,8 +7,25 @@ import WeatherInfoCard from "./components/WeatherInfoCard";
 import DailyForecast from "./components/DailyForecast";
 import HourlyForecast from "./components/HourlyForecast";
 import Select from "./components/Select";
+import useGeolocation from "./utils/useGeolocalisation";
+import FetchCityCountry from "./services/FetchCityCountry";
 
 function App() {
+    const [state, setState] = useState({data: null, loading: true, error: null});
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useGeolocation();
+    }, []);
+
+    useEffect(() => {
+        async function loadCoords() {
+            const result = await FetchCityCountry();
+            setState(result);
+        }
+
+        loadCoords();
+    }, []);
 
     return (
         <>
@@ -26,7 +44,7 @@ function App() {
                 className="sm:grid sm:grid-cols-1 lg:sm:grid-cols-3 gap-4 px-4 sm:w-full sm:mx-auto sm:my-8 sm:px-14">
                 <div className="flex flex-col justify-start lg:col-span-2">
                     <section className="flex flex-col w-full justify-center sm:flex sm:flex-col sm:gap-4">
-                        <WeatherCard/>
+                        <WeatherCard coords={state}/>
                         <WeatherInfoCard/>
                     </section>
 
@@ -36,11 +54,7 @@ function App() {
                     </section>
                 </div>
                 <section
-                    className="flex flex-col sm:w-full justify-center mt-8 sm:mt-0 p-4 sm:block bg-neutral-800 rounded-2xl">
-                    <div className="flex justify-between items-center mb-4">
-                        <h4>Hourly Forecast</h4>
-                        <Select icon="none" color="600">Tuesday</Select>
-                    </div>
+                    className="sm:w-full mt-8 sm:mt-0 p-4 pt-0 max-h-[593px] sm:max-h-[606px] overflow-scroll block bg-neutral-800 rounded-2xl">
                     <HourlyForecast/>
                 </section>
             </section>
