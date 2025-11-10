@@ -1,6 +1,6 @@
 import getWeatherCode from "../utils/getWeatherCode";
 
-export default async function fetchDailyMeteo(latitude = null, longitude = null) {
+export default async function fetchWeatherCard(latitude = null, longitude = null) {
     let weatherData;
     let defaultLatitude = 47.6569;
     let defaultLongitude = -2.762;
@@ -16,11 +16,10 @@ export default async function fetchDailyMeteo(latitude = null, longitude = null)
         const params = {
             latitude: latitude === null ? defaultLatitude : latitude,
             longitude: longitude === null ? defaultLongitude : longitude,
-            daily: ["temperature_2m_min", "temperature_2m_max", "weather_code"],
+            current: ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "wind_speed_10m", "precipitation", "weather_code"],
             timezone: "auto"
         };
 
-        // Construire l’URL avec les paramètres
         const query = new URLSearchParams();
         for (const key in params) {
             const value = params[key];
@@ -38,17 +37,18 @@ export default async function fetchDailyMeteo(latitude = null, longitude = null)
         const data = await res.json();
 
         weatherData = {
-            latitude: data.latitude,
-            longitude: data.longitude,
-            elevation: data.elevation,
             timezone: data.timezone,
-            daily: {
-                time: data.daily.time.map((t) => new Date(t).toLocaleDateString("en-US", {weekday: "long"})),
-                weather_code: getWeatherCode(data.daily.weather_code),
-                temperature_2m_min: data.daily.temperature_2m_min,
-                temperature_2m_max: data.daily.temperature_2m_max,
+            current: {
+                time: data.current.time,
+                weather_code: getWeatherCode([data.current.weather_code]),
+                temperature_2m: data.current.temperature_2m,
+                relative_humidity_2m: data.current.relative_humidity_2m,
+                apparent_temperature: data.current.apparent_temperature,
+                wind_speed_10m: data.current.wind_speed_10m,
+                precipitation: data.current.precipitation,
             },
         };
+
         return weatherData;
 
     } catch (err) {

@@ -1,6 +1,6 @@
 import {IconUnits, IconDropdown} from "./icons.jsx";
 
-export const Select = ({icon = "units", children, color = "800"}) => {
+export const Select = ({icon = "none", children, color = "800", otherSelect = [], onchange = null}) => {
     const icons = {
         "units": <IconUnits/>,
         "none": null,
@@ -11,6 +11,7 @@ export const Select = ({icon = "units", children, color = "800"}) => {
         "700": "bg-neutral-700",
         "600": "bg-neutral-600",
     }
+
     return (
         <div>
             <div className="w-min relative">
@@ -20,9 +21,10 @@ export const Select = ({icon = "units", children, color = "800"}) => {
 
                 <select
                     id="modern-select"
-                    className={`appearance-none ${icon === "none" ? "pr-7 pl-2" : "px-7"} sm:px-10 text-center py-1 sm:py-3 rounded-lg ${bgColor[color]} border border-transparent transition duration-200 cursor-pointer`}
+                    className={`appearance-none ${icon === "none" ? "pr-7 pl-2" : "px-7 sm:px-10"} text-center py-1 sm:py-3 rounded-lg ${bgColor[color]} border border-transparent transition duration-200 cursor-pointer focus:outline-2 focus:outline-offset-2 focus:outline-white`}
+                    onChange={onchange}
                 >
-                    <option value="">{children}</option>
+                    {otherSelect.map((option, index) => <option key={index} value={option}>{option}</option>)}
                 </select>
 
                 <span className="pointer-events-none absolute right-2 top-1/2 transform -translate-y-1/2">
