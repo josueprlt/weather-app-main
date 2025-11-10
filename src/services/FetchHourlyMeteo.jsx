@@ -1,11 +1,21 @@
 import getWeatherCode from "../utils/getWeatherCode.jsx";
 
-export default async function fetchHourlyMeteo() {
+export default async function fetchHourlyMeteo(latitude = null, longitude = null) {
     let weatherData;
+    let defaultLatitude = 47.6569;
+    let defaultLongitude = -2.762;
+
+    const location = localStorage.getItem("Location");
+    if (location !== null) {
+        const coords = JSON.parse(location);
+        defaultLatitude = coords.latitude;
+        defaultLongitude = coords.longitude;
+    }
+
     try {
         const params = {
-            latitude: 48.8534,
-            longitude: 2.3488,
+            latitude: latitude === null ? defaultLatitude : latitude,
+            longitude: longitude === null ? defaultLongitude : longitude,
             hourly: ["weather_code", "temperature_2m", "dew_point_2m"],
             timezone: "auto"
         };
@@ -41,6 +51,6 @@ export default async function fetchHourlyMeteo() {
 
     } catch (err) {
         console.log(err.message);
-        return { error: err.message, data: null, loading: false };
+        return {error: err.message, data: null, loading: false};
     }
 }

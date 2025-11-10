@@ -1,20 +1,36 @@
 import {SyncLoader} from "react-spinners";
 import {useEffect, useState} from "react";
 import FetchWeatherCard from "../services/FetchWeatherCard";
+import FetchCityCountry from "../services/FetchCityCountry.jsx";
 
-export const WeatherCard = ({ coords }) => {
+export const WeatherCard = ({latitude = null, longitude = null, setError}) => {
     const [state, setState] = useState({data: null, loading: true, error: null});
-    const [location, setLocation] = useState(null);
+    const [coords, setCoords] = useState({data: null, loading: true, error: null});
     const [time, setTime] = useState(null);
 
     useEffect(() => {
         async function loadWeather() {
-            const result = await FetchWeatherCard();
+            let result;
+            let resultCity;
+            setState({data: null, loading: true, error: null})
+            setCoords({data: null, loading: true, error: null})
+
+            if (latitude && longitude) {
+                result = await FetchWeatherCard(latitude, longitude);
+                resultCity = await FetchCityCountry(latitude, longitude);
+            } else {
+                result = await FetchWeatherCard();
+                resultCity = await FetchCityCountry();
+            }
+            if (result.error) setError(result.error);
+            if (resultCity.error) setError(resultCity.error);
+
             setState(result);
+            setCoords(resultCity);
         }
 
         loadWeather();
-    }, []);
+    }, [latitude, longitude]);
 
     useEffect(() => {
         if (!state.timezone) return;
@@ -29,7 +45,8 @@ export const WeatherCard = ({ coords }) => {
             day: 'numeric'
         };
         setTime(date.toLocaleDateString('en-US', options));
-    }, [state]);
+    }, [state, latitude, longitude]);
+
 
     if (state.loading || coords.loading) return (
         <div

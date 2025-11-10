@@ -1,18 +1,18 @@
-export default async function fetchCityCountry() {
+export default async function fetchCityCountry(latitude = null, longitude = null) {
     let coordsData;
-    let latitude = 47.6569; // Default value
-    let longitude = -2.762; // Default value
+    let defaultLatitude = 47.6569;
+    let defaultLongitude = -2.762;
 
     const location = localStorage.getItem("Location");
     if (location !== null) {
         const coords = JSON.parse(location);
-        latitude = coords.latitude;
-        longitude = coords.longitude;
+        defaultLatitude = coords.latitude;
+        defaultLongitude = coords.longitude;
     }
 
     let locationDetails = {};
     try {
-        const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`;
+        const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude === null ? defaultLatitude : latitude}&lon=${longitude === null ? defaultLongitude : longitude}&zoom=10&addressdetails=1`;
         const res = await fetch(nominatimUrl);
         const data = await res.json();
 

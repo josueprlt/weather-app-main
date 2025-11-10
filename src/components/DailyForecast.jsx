@@ -3,17 +3,26 @@ import fetchDailyMeteo from "../services/FetchDailyMeteo";
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
-export const DailyForecast = () => {
+export const DailyForecast = ({latitude = null, longitude = null, setError}) => {
     const [state, setState] = useState({data: null, loading: true, error: null});
 
     useEffect(() => {
         async function loadWeather() {
-            const result = await fetchDailyMeteo();
+            let result;
+            setState({data: null, loading: true, error: null})
+
+            if (latitude && longitude) {
+                result = await fetchDailyMeteo(latitude, longitude);
+            } else {
+                result = await fetchDailyMeteo();
+            }
+            if (result.error) setError(result.error);
+
             setState(result);
         }
 
         loadWeather();
-    }, []);
+    }, [latitude, longitude]);
 
     if (state.loading) return (
         <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 md:grid-cols-7">

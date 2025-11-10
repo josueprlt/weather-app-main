@@ -5,18 +5,28 @@ import getAMPMCode from "../utils/getAMPMCode";
 import Skeleton from "react-loading-skeleton";
 import Select from "./Select.jsx";
 
-export const HourlyForecast = () => {
+export const HourlyForecast = ({latitude = null, longitude = null, setError}) => {
     const [state, setState] = useState({data: null, loading: true, error: null});
     const [hourlyForecast, setHourlyForecast] = useState([]);
+    const [realHourlyForecast, setRealHourlyForecast] = useState(null);
 
     useEffect(() => {
         async function loadWeather() {
-            const result = await fetchHourlyMeteo();
+            let result;
+            setState({data: null, loading: true, error: null})
+
+            if (latitude && longitude) {
+                result = await fetchHourlyMeteo(latitude, longitude);
+            } else {
+                result = await fetchHourlyMeteo();
+            }
+            if (result.error) setError(result.error);
+
             setState(result);
         }
 
         loadWeather();
-    }, []);
+    }, [latitude, longitude]);
 
     useEffect(() => {
         if (!state || !state.hourly || !state.hourly.time) return;
@@ -69,7 +79,12 @@ export const HourlyForecast = () => {
         // 3. Mettre à jour l'état final
         setHourlyForecast(groupedByDay);
 
-    }, [state]);
+    }, [state, latitude, longitude]);
+
+    const handlerChangeDay = (event) => {
+        const filterDay = hourlyForecast.filter((day) => day.day === event.target.value);
+        setRealHourlyForecast(filterDay[0]);
+    }
 
     if (!(hourlyForecast.length > 0)) return (
         <>
@@ -107,10 +122,11 @@ export const HourlyForecast = () => {
         <>
             <div className="flex justify-between items-center pt-4 pb-4 sticky top-0 bg-neutral-800">
                 <h4>Hourly Forecast</h4>
-                <Select color="600" otherSelect={hourlyForecast.map((day) => day.day)} />
+                <Select color="600" otherSelect={hourlyForecast.map((day) => day.day)} onchange={handlerChangeDay}/>
             </div>
             <div className="grid grid-cols-1 gap-4 top-0">
-                <HourlyForecastCard hours={hourlyForecast[0].hours}/>
+                <HourlyForecastCard
+                    hours={realHourlyForecast === null ? hourlyForecast[0].hours : realHourlyForecast.hours}/>
             </div>
         </>
     )

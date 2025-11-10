@@ -2,17 +2,26 @@ import {useState, useEffect} from "react";
 import FetchWeatherCard from "../services/FetchWeatherCard";
 import {SyncLoader} from "react-spinners";
 
-export const WeatherInfoCards = () => {
+export const WeatherInfoCards = ({latitude = null, longitude = null, setError}) => {
     const [state, setState] = useState({data: null, loading: true, error: null});
 
     useEffect(() => {
         async function loadWeather() {
-            const result = await FetchWeatherCard();
+            let result;
+            setState({data: null, loading: true, error: null})
+
+            if (latitude && longitude) {
+                result = await FetchWeatherCard(latitude, longitude);
+            } else {
+                result = await FetchWeatherCard();
+            }
+            if (result.error) setError(result.error);
+
             setState(result);
         }
 
         loadWeather();
-    }, []);
+    }, [latitude, longitude]);
 
     const InfoCards = [
         {id: "feelslike", title: "Feels like"},
@@ -24,7 +33,8 @@ export const WeatherInfoCards = () => {
     if (state.loading) return (
         <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {InfoCards.map((card, index) =>
-                <div key={index} className="bg-neutral-800 rounded-lg p-4 flex flex-col gap-2 border border-neutral-600">
+                <div key={index}
+                     className="bg-neutral-800 rounded-lg p-4 flex flex-col gap-2 border border-neutral-600">
                     <h4 className="text-neutral-300">{card.title}</h4>
                     <p className="text-2xl font-extralight">-</p>
                 </div>
@@ -35,7 +45,7 @@ export const WeatherInfoCards = () => {
 
     return (
         <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {InfoCards.map((card, index) => <WeatherInfoCard key={index} {...card} state={state} />)}
+            {InfoCards.map((card, index) => <WeatherInfoCard key={index} {...card} state={state}/>)}
         </section>
     )
 }

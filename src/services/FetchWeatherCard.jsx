@@ -1,21 +1,21 @@
 import getWeatherCode from "../utils/getWeatherCode";
 
-export default async function fetchWeatherCard() {
+export default async function fetchWeatherCard(latitude = null, longitude = null) {
     let weatherData;
-    let latitude = 47.6569; // Default value
-    let longitude = -2.762; // Default value
+    let defaultLatitude = 47.6569;
+    let defaultLongitude = -2.762;
 
     const location = localStorage.getItem("Location");
     if (location !== null) {
         const coords = JSON.parse(location);
-        latitude = coords.latitude;
-        longitude = coords.longitude;
+        defaultLatitude = coords.latitude;
+        defaultLongitude = coords.longitude;
     }
 
     try {
         const params = {
-            latitude: latitude,
-            longitude: longitude,
+            latitude: latitude === null ? defaultLatitude : latitude,
+            longitude: longitude === null ? defaultLongitude : longitude,
             current: ["temperature_2m", "relative_humidity_2m", "apparent_temperature", "wind_speed_10m", "precipitation", "weather_code"],
             timezone: "auto"
         };
