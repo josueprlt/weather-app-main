@@ -47,7 +47,6 @@ export const WeatherCard = ({latitude = null, longitude = null, setError}) => {
         setTime(date.toLocaleDateString('en-US', options));
     }, [state, latitude, longitude]);
 
-
     if (state.loading || coords.loading) return (
         <div
             className="flex flex-col justify-center gap-6 items-center my-4 sm:my-0 w-full h-[228px] sm:h-[286px] bg-neutral-800 rounded-xl">

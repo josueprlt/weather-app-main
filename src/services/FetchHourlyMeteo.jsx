@@ -4,6 +4,9 @@ export default async function fetchHourlyMeteo(latitude = null, longitude = null
     let weatherData;
     let defaultLatitude = 47.6569;
     let defaultLongitude = -2.762;
+    let defaultTemperature = "celsius";
+    let defaultWind = "km/h";
+    let defaultPrecipitation = "mm";
 
     const location = localStorage.getItem("Location");
     if (location !== null) {
@@ -12,12 +15,23 @@ export default async function fetchHourlyMeteo(latitude = null, longitude = null
         defaultLongitude = coords.longitude;
     }
 
+    const preferences = localStorage.getItem("Preferences");
+    if (preferences !== null) {
+        const prefs = JSON.parse(preferences);
+        defaultTemperature = prefs.temperature;
+        defaultWind = prefs.wind;
+        defaultPrecipitation = prefs.precipitation;
+    }
+
     try {
         const params = {
             latitude: latitude === null ? defaultLatitude : latitude,
             longitude: longitude === null ? defaultLongitude : longitude,
             hourly: ["weather_code", "temperature_2m", "dew_point_2m"],
-            timezone: "auto"
+            timezone: "auto",
+            temperature_unit: defaultTemperature,
+            wind_speed_unit: defaultWind === "km/h" ? "kmh" : defaultWind,
+            precipitation_unit: defaultPrecipitation === "in" ? "inch" : defaultPrecipitation
         };
 
         // Construire l’URL avec les paramètres

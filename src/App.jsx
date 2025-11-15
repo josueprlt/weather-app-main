@@ -1,37 +1,46 @@
 import {useState, useEffect} from "react";
 import Navbar from "./components/Navbar";
 import ResearchBar from "./components/ResearchBar";
-import Button from "./components/Button";
 import WeatherCard from "./components/WeatherCard";
 import WeatherInfoCard from "./components/WeatherInfoCard";
 import DailyForecast from "./components/DailyForecast";
 import HourlyForecast from "./components/HourlyForecast";
 import useGeolocation from "./utils/useGeolocalisation";
-import FetchCityCountry from "./services/FetchCityCountry";
 import ApiError from "./components/ApiError";
-import DropDown from "./components/DropDown";
+import DropDownResearchBar from "./components/DropDownResearchBar.jsx";
 import fetchResearchGeolocalisation from "./services/FetchResearchGeolocalisation.jsx";
 
 function App() {
     const [error, setError] = useState(null);
-    const [openDropdown, setOpenDropdown] = useState(false);
+    const [openDropdownResearchBar, setOpenDropdownResearchBar] = useState(false);
     const [dataCity, setDataCity] = useState(null);
     const [query, setQuery] = useState("");
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const [loadingCity, setLoadingCity] = useState(false);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
+    const [prefs, setPrefs] = useState(null);
 
     useEffect(() => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useGeolocation();
+
+        if (!localStorage.getItem("Preferences")) {
+            localStorage.setItem("Preferences", JSON.stringify({
+                temperature: "celsius",
+                wind: "km/h",
+                precipitation: "mm"
+            }));
+        }
+
+        setPrefs(JSON.parse(localStorage.getItem("Preferences")));
     }, []);
 
     useEffect(() => {
         if (query.length === 0) {
-            setOpenDropdown(false);
+            setOpenDropdownResearchBar(false);
         } else {
-            setOpenDropdown(true);
+            setOpenDropdownResearchBar(true);
         }
 
         const timer = setTimeout(() => {
@@ -61,16 +70,14 @@ function App() {
 
     const handleFocus = () => {
         if (query.length === 0) return
-        setOpenDropdown(true);
+        setOpenDropdownResearchBar(true);
     }
 
     const handleBlur = () => {
         setTimeout(() => {
-            setOpenDropdown(false);
+            setOpenDropdownResearchBar(false);
         }, 500)
     }
-
-    console.log(error)
 
     return (
         <>
@@ -86,19 +93,19 @@ function App() {
                         <div className="relative w-full col-span-4">
                             <ResearchBar props={"w-full"} value={query} setValue={setQuery} handleFocus={handleFocus}
                                          handleBlur={handleBlur}/>
-                            <DropDown props={"absolute w-full z-1 top-10 sm:top-15 overflow-hidden"} open={openDropdown}
-                                      childs={dataCity} loading={loadingCity} setLatitude={setLatitude}
-                                      setLongitude={setLongitude}/>
+                            <DropDownResearchBar props={"absolute w-full z-1 top-10 sm:top-15 overflow-hidden"}
+                                                 open={openDropdownResearchBar}
+                                                 childs={dataCity} loading={loadingCity} setLatitude={setLatitude}
+                                                 setLongitude={setLongitude}/>
                         </div>
-                        {/*<Button props={"w-full"}>Search</Button>*/}
                     </div>
 
                     <section
                         className="sm:grid sm:grid-cols-1 lg:sm:grid-cols-3 gap-4 px-4 sm:w-full sm:mx-auto sm:my-8 sm:px-14">
                         <div className="flex flex-col justify-start lg:col-span-2">
                             <section className="flex flex-col w-full justify-center sm:flex sm:flex-col sm:gap-4">
-                                <WeatherCard latitude={latitude} longitude={longitude} setError={setError}/>
-                                <WeatherInfoCard latitude={latitude} longitude={longitude} setError={setError}/>
+                                <WeatherCard latitude={latitude} longitude={longitude} setError={setError} />
+                                <WeatherInfoCard latitude={latitude} longitude={longitude} setError={setError} prefs={prefs}/>
                             </section>
 
                             <section className="flex flex-col sm:w-full justify-center sm:block">

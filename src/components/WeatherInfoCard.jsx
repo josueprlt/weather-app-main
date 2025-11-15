@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import FetchWeatherCard from "../services/FetchWeatherCard";
 import {SyncLoader} from "react-spinners";
 
-export const WeatherInfoCards = ({latitude = null, longitude = null, setError}) => {
+export const WeatherInfoCards = ({latitude = null, longitude = null, setError, prefs}) => {
     const [state, setState] = useState({data: null, loading: true, error: null});
 
     useEffect(() => {
@@ -45,16 +45,16 @@ export const WeatherInfoCards = ({latitude = null, longitude = null, setError}) 
 
     return (
         <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {InfoCards.map((card, index) => <WeatherInfoCard key={index} {...card} state={state}/>)}
+            {InfoCards.map((card, index) => <WeatherInfoCard key={index} {...card} state={state} prefs={prefs}/>)}
         </section>
     )
 }
 
-const WeatherInfoCard = ({title, id, state}) => {
+const WeatherInfoCard = ({title, id, state, prefs}) => {
     return (
         <div className="bg-neutral-800 rounded-lg p-4 flex flex-col gap-2 border border-neutral-600">
             <h4 className="text-neutral-300">{title}</h4>
-            <p className="text-2xl font-extralight">{id === "feelslike" ? `${state.current.apparent_temperature}°` : id === "humidity" ? `${state.current.relative_humidity_2m}%` : id === "wind" ? `${state.current.wind_speed_10m} km/h` : id === "precipitation" && `${state.current.precipitation} mm`}</p>
+            <p className="text-2xl font-extralight">{id === "feelslike" ? `${state.current.apparent_temperature}°${prefs.temperature === 'celsius' ? 'C' : prefs.temperature === 'fahrenheit' ? 'F' : ''}` : id === "humidity" ? `${state.current.relative_humidity_2m}%` : id === "wind" ? `${state.current.wind_speed_10m} ${prefs.wind === 'km/h' ? 'km/h' : prefs.wind === 'mph' ? 'mph' : ''}` : id === "precipitation" && `${state.current.precipitation} ${prefs.precipitation === 'mm' ? 'mm' : prefs.precipitation === 'in' ? 'in' : ''}`}</p>
         </div>
     )
 }

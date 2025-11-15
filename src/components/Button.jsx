@@ -1,4 +1,4 @@
-import {IconRetry} from "./icons";
+import {IconRetry, IconUnits} from "./icons";
 
 export const Button = ({children, props, color = "purple", icon = "none", onclick = null}) => {
     const clr = {
@@ -9,6 +9,7 @@ export const Button = ({children, props, color = "purple", icon = "none", onclic
     const icn = {
         "none": null,
         "retry": <IconRetry/>,
+        "units": <IconUnits/>
     }
 
     return (
