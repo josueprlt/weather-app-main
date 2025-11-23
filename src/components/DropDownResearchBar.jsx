@@ -1,7 +1,7 @@
 import {IconLoading} from "./icons";
 import ReactCountryFlag from "react-country-flag";
 
-export const DropDown = ({childs, props, open = false, loading = false, setLatitude, setLongitude}) => {
+export const DropDownResearchBar = ({childs, props, open = false, loading = false, setLatitude, setLongitude}) => {
     if (!open) return null;
 
     return (
@@ -61,4 +61,4 @@ const DropDownChild = ({lists, loading, setLatitude, setLongitude}) => {
     );
 };
 
-export default DropDown;
+export default DropDownResearchBar;
