@@ -58,7 +58,7 @@ export const WeatherCard = ({latitude = null, longitude = null, setError}) => {
 
     return (
         <div
-            className="flex p-3 flex-col sm:flex-row justify-around items-center my-4 sm:my-0 w-full sm:h-[286px] relative bg-[url('./bg-today-small.svg')] sm:bg-[url('./bg-today-large.svg')] bg-cover bg-center overflow-hidden rounded-xl">
+            className="flex p-3 flex-col sm:flex-row justify-around items-center my-4 sm:my-0 w-full sm:h-[286px] relative bg-[url('/bg-today-small.svg')] sm:bg-[url('/bg-today-large.svg')] bg-cover bg-center overflow-hidden rounded-xl">
             <div className="flex justify-center items-center sm:items-start flex-col gap-2 sm:gap-4 pt-5 sm:pt-0">
                 <h2 className="text-2xl font-bold">{coords.city}, {coords.country}</h2>
                 <p className="text-md text-neutral-200">{time}</p>
